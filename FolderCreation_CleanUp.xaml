@@ -1,0 +1,382 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="FolderCreation_CleanUp" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="ArgInConfig" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
+    <x:Property Name="ArgInLogNotifications" Type="InArgument(sd:DataTable)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1294,3502</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>FolderCreation_CleanUp_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="44">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="19">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="This module first kills the Box App and restarts the app so that the current user Box gets mapped properly after any other user's previous run and checks if Box path exists. It then checks whether Input Master File is present at the Box location and proceeds with clean up of previous run files and creating new folder structure." DisplayName="FolderStructure_Creation&amp;CleanUp" sap:VirtualizedContainerService.HintSize="1304,3297.33333333333" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:Boolean" Name="vBoolTempBoxFolderExists" />
+      <Variable x:TypeArguments="x:Boolean" Name="vBoolMasterFilePresent" />
+      <Variable x:TypeArguments="x:String" Name="str_ICCRunStatus" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="1262,52.6666666666667" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Restarting Box App started&quot;]">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:LogMessage>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke LogFile workflow" sap:VirtualizedContainerService.HintSize="1262,52.6666666666667" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Logging\LogFile.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrLogNumber">LOG-M2</InArgument>
+        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="argIdicConfig">[ArgInConfig]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrKeyValues" />
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrErrorScreenshot" />
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="argIdtLogNotification">[ArgInLogNotifications]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="arglstrTechincalExceptionMessage" />
+        <OutArgument x:TypeArguments="x:String" x:Key="argOException" />
+        <InArgument x:TypeArguments="x:Int32" x:Key="argIstrTransactionID">0</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="argInDBConnectionString">[ArgInConfig("DB_ConnectionString").ToString]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:InvokeWorkflowFile>
+    <Sequence sap2010:Annotation.AnnotationText="Restarts Box App and maps it." DisplayName="Run Box Restart" sap:VirtualizedContainerService.HintSize="1262,114.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_7">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:Boolean" Name="vBool_BoxFileExists" />
+        <Variable x:TypeArguments="x:TimeSpan" Default="00:00:15" Name="vDateTimeDelayMed" />
+      </Sequence.Variables>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <ui:KillProcess Process="{x:Null}" ContinueOnError="True" DisplayName="Kill Box Process" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="KillProcess_1" ProcessName="box" />
+      <Delay DisplayName="Delay- Kill Box" Duration="00:00:10" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Delay_1" />
+      <ui:PathExists DisplayName="Path Exists- Box" Exists="[vBool_BoxFileExists]" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="PathExists_2" Path="[ArgInConfig(&quot;Box_EXE_Location&quot;).ToString]" PathType="File">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </ui:PathExists>
+      <If Condition="[vBool_BoxFileExists]" DisplayName="If Executable Present" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="If_2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+        <If.Then>
+          <Sequence sap:VirtualizedContainerService.HintSize="242,296" sap2010:WorkflowViewState.IdRef="Sequence_5">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Run Box application&quot;]">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+            </ui:LogMessage>
+            <ui:StartProcess Arguments="{x:Null}" WorkingDirectory="{x:Null}" sap2010:Annotation.AnnotationText="Note: Continue on Error is true due to the the start process couls not open the application. However, it would still map the drive" ContinueOnError="True" DisplayName="Start Process- Box" FileName="[ArgInConfig(&quot;Box_EXE_Location&quot;).ToString]" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="StartProcess_1">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  <x:Boolean x:Key="IsAnnotationDocked">False</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+            </ui:StartProcess>
+            <Delay DisplayName="Delay-Box to open" Duration="[vDateTimeDelayMed]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Delay_2" />
+          </Sequence>
+        </If.Then>
+        <If.Else>
+          <Sequence sap:VirtualizedContainerService.HintSize="242,205" sap2010:WorkflowViewState.IdRef="Sequence_6">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:SendOutlookMail Account="{x:Null}" Bcc="{x:Null}" MailMessage="{x:Null}" TimeoutMS="{x:Null}" Body="[ArgInConfig(&quot;Generic_ExceptionBody&quot;).ToString.Replace(&quot;ExceptionMessage&quot;,ArgInConfig(&quot;Box_ExceptionBody&quot;).ToString+Environment.NewLine+ArgInConfig(&quot;Box_EXE_Location&quot;).ToString)]" Cc="[ArgInConfig(&quot;SupportMailRecipients&quot;).ToString]" DisplayName="Send Outlook Mail Message" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="SendOutlookMail_1" IsBodyHtml="True" IsDraft="False" Subject="[ArgInConfig(&quot;Generic_ExceptionSubject&quot;).ToString]" To="[ArgInConfig(&quot;BusinessMailRecipients&quot;).ToString]">
+              <ui:SendOutlookMail.Files>
+                <scg:List x:TypeArguments="InArgument(x:String)" Capacity="4" />
+              </ui:SendOutlookMail.Files>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+            </ui:SendOutlookMail>
+            <Throw DisplayName="Throw Box Error" Exception="[new BusinessRuleException(&quot;Cannot find executable file for Box application- &quot;+ArgInConfig(&quot;Box_LocationPath&quot;).ToString)]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Throw_1" />
+          </Sequence>
+        </If.Else>
+      </If>
+    </Sequence>
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="1262,52.6666666666667" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;Completed Box App Restarting&quot;]">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:LogMessage>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke LogFile workflow" sap:VirtualizedContainerService.HintSize="1262,52.6666666666667" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Logging\LogFile.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrLogNumber">LOG-M3</InArgument>
+        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="argIdicConfig">[ArgInConfig]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrKeyValues" />
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrErrorScreenshot" />
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="argIdtLogNotification">[ArgInLogNotifications]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="arglstrTechincalExceptionMessage" />
+        <OutArgument x:TypeArguments="x:String" x:Key="argOException" />
+        <InArgument x:TypeArguments="x:Int32" x:Key="argIstrTransactionID">0</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="argInDBConnectionString">[ArgInConfig("DB_ConnectionString").ToString]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke LogFile workflow" sap:VirtualizedContainerService.HintSize="1262,52.6666666666667" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Logging\LogFile.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrLogNumber">LOG-M4</InArgument>
+        <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="argIdicConfig">[ArgInConfig]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrKeyValues" />
+        <InArgument x:TypeArguments="x:String" x:Key="argIstrErrorScreenshot" />
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="argIdtLogNotification">[ArgInLogNotifications]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="arglstrTechincalExceptionMessage" />
+        <OutArgument x:TypeArguments="x:String" x:Key="argOException" />
+        <InArgument x:TypeArguments="x:Int32" x:Key="argIstrTransactionID">0</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="argInDBConnectionString">[ArgInConfig("DB_ConnectionString").ToString]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:InvokeWorkflowFile>
+    <ui:PathExists DisplayName="Input Master File Exists" Exists="[vBoolMasterFilePresent]" sap:VirtualizedContainerService.HintSize="1262,52.6666666666667" sap2010:WorkflowViewState.IdRef="PathExists_3" Path="[ArgInConfig(&quot;Box_InputMasterFilePath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+&quot;\&quot;+ArgInConfig(&quot;Box_MasterFile_Name&quot;).ToString+&quot;.xlsx&quot;]" PathType="File">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:PathExists>
+    <If sap2010:Annotation.AnnotationText="Creates required folder structure after clean up  if Master File is present else throws an exception." Condition="[vBoolMasterFilePresent]" DisplayName="If Master File Present" sap:VirtualizedContainerService.HintSize="1262,2449.33333333333" sap2010:WorkflowViewState.IdRef="If_3">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <If.Then>
+        <Sequence sap:VirtualizedContainerService.HintSize="840,2264.66666666667" sap2010:WorkflowViewState.IdRef="Sequence_11">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="798,94.6666666666667" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info" Message="[&quot;Check Prev Run status&quot;]" />
+          <ui:GetRobotAsset TimeoutMS="{x:Null}" AssetName="[ArgInConfig(&quot;ICC_RunStatus_AssetName&quot;).ToString]" DisplayName="Get Asset - ICC Run status" sap:VirtualizedContainerService.HintSize="798,22" sap2010:WorkflowViewState.IdRef="GetRobotAsset_1">
+            <ui:GetRobotAsset.Value>
+              <OutArgument x:TypeArguments="x:String">[str_ICCRunStatus]</OutArgument>
+            </ui:GetRobotAsset.Value>
+          </ui:GetRobotAsset>
+          <If Condition="[str_ICCRunStatus.ToLower=&quot;fail&quot;]" DisplayName="Check PrevRun status" sap:VirtualizedContainerService.HintSize="798,528" sap2010:WorkflowViewState.IdRef="If_5">
+            <If.Then>
+              <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,94.6666666666667" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Info" Message="[&quot;Prev run failed - do not delete PrevRun SAP folder&quot;]" />
+            </If.Then>
+            <If.Else>
+              <Sequence sap:VirtualizedContainerService.HintSize="376,374" sap2010:WorkflowViewState.IdRef="Sequence_12">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="334,94.6666666666667" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="Info" Message="[&quot;Prev run passed - delete prev run SAP folder&quot;]" />
+                <ui:Delete ContinueOnError="True" DisplayName="Delete PrevRunSAP folder" sap:VirtualizedContainerService.HintSize="334,22" sap2010:WorkflowViewState.IdRef="Delete_4" Path="[ArgInConfig(&quot;Temp_PrevRun_SAPDownloads&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder TempBoxLocation" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_31" Path="[ArgInConfig(&quot;Temp_PrevRun_SAPDownloads&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)]">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:CreateDirectory>
+              </Sequence>
+            </If.Else>
+          </If>
+          <ui:PathExists DisplayName="Temp Box Folder Path Exists" Exists="[vBoolTempBoxFolderExists]" sap:VirtualizedContainerService.HintSize="798,90.6666666666667" sap2010:WorkflowViewState.IdRef="PathExists_4" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)]" PathType="Folder">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+          </ui:PathExists>
+          <If Condition="[vBoolTempBoxFolderExists]" DisplayName="If Temp Box Folder Location exists" sap:VirtualizedContainerService.HintSize="798,1020" sap2010:WorkflowViewState.IdRef="If_4">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <If.Then>
+              <Sequence DisplayName="If Folder Present - Delete and Create Again" sap:VirtualizedContainerService.HintSize="376,866" sap2010:WorkflowViewState.IdRef="Sequence_9">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:Delete ContinueOnError="True" DisplayName="Delete TempBoxLocation" sap:VirtualizedContainerService.HintSize="334,22" sap2010:WorkflowViewState.IdRef="Delete_3" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder TempBoxLocation" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_19" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)]">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:CreateDirectory>
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder DownloadedSAPFiles" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_20" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempSAPDownloads_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder InputBrazilExcelData" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_21" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempBrazilData_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder InputMasterExcel" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_22" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempMasterExcel_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder ProcessedOutputMasterExcel" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_23" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempProcessedMasterExcel_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder Temp" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_24" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempCopy_Folder&quot;).ToString]" />
+              </Sequence>
+            </If.Then>
+            <If.Else>
+              <Sequence DisplayName="If Folder Not Present - Create" sap:VirtualizedContainerService.HintSize="376,804" sap2010:WorkflowViewState.IdRef="Sequence_10">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder TempBoxLocation" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_25" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)]">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </ui:CreateDirectory>
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder DownloadedSAPFiles" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_26" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempSAPDownloads_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder InputBrazilExcelData" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_27" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempBrazilData_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder InputMasterExcel" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_28" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempMasterExcel_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder ProcessedOutputMasterExcel" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_29" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempProcessedMasterExcel_FolderName&quot;).ToString]" />
+                <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Folder Temp" sap:VirtualizedContainerService.HintSize="334,85.3333333333333" sap2010:WorkflowViewState.IdRef="CreateDirectory_30" Path="[ArgInConfig(&quot;TempBox_FolderPath&quot;).ToString.Replace(&quot;&lt;username&gt;&quot;,environment.UserName.ToString)+ArgInConfig(&quot;TempCopy_Folder&quot;).ToString]" />
+              </Sequence>
+            </If.Else>
+          </If>
+          <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke LogFile workflow" sap:VirtualizedContainerService.HintSize="798,86.6666666666667" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="Logging\LogFile.xaml">
+            <ui:InvokeWorkflowFile.Arguments>
+              <InArgument x:TypeArguments="x:String" x:Key="argIstrLogNumber">LOG-M5</InArgument>
+              <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="argIdicConfig">[ArgInConfig]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="argIstrKeyValues" />
+              <InArgument x:TypeArguments="x:String" x:Key="argIstrErrorScreenshot" />
+              <InArgument x:TypeArguments="sd:DataTable" x:Key="argIdtLogNotification">[ArgInLogNotifications]</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="arglstrTechincalExceptionMessage" />
+              <OutArgument x:TypeArguments="x:String" x:Key="argOException" />
+              <InArgument x:TypeArguments="x:Int32" x:Key="argIstrTransactionID">0</InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="argInDBConnectionString">[ArgInConfig("DB_ConnectionString").ToString]</InArgument>
+            </ui:InvokeWorkflowFile.Arguments>
+          </ui:InvokeWorkflowFile>
+          <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="797,91" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[&quot;Completed Folder Structure creation&quot;]" />
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Sequence sap:VirtualizedContainerService.HintSize="376,303.333333333333" sap2010:WorkflowViewState.IdRef="Sequence_8">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <ui:SendOutlookMail Account="{x:Null}" Bcc="{x:Null}" MailMessage="{x:Null}" TimeoutMS="{x:Null}" Body="[ArgInConfig(&quot;Generic_ExceptionBody&quot;).ToString.Replace(&quot;ExceptionMessage&quot;,ArgInConfig(&quot;MasterFileMissing_ExceptionBody&quot;).ToString)]" Cc="[ArgInConfig(&quot;SupportMailRecipients&quot;).ToString]" DisplayName="Send Outlook Mail Message" sap:VirtualizedContainerService.HintSize="334,149.333333333333" sap2010:WorkflowViewState.IdRef="SendOutlookMail_2" IsBodyHtml="True" IsDraft="False" Subject="[ArgInConfig(&quot;Generic_ExceptionSubject&quot;).ToString]" To="[ArgInConfig(&quot;BusinessMailRecipients&quot;).ToString]">
+            <ui:SendOutlookMail.Files>
+              <scg:List x:TypeArguments="InArgument(x:String)" Capacity="4" />
+            </ui:SendOutlookMail.Files>
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+          </ui:SendOutlookMail>
+          <Throw DisplayName="Throw MasterFileMissing Error" Exception="[new BusinessRuleException(&quot;Input MasterFile missing at required location&quot;)]" sap:VirtualizedContainerService.HintSize="334,22" sap2010:WorkflowViewState.IdRef="Throw_2" />
+        </Sequence>
+      </If.Else>
+    </If>
+  </Sequence>
+</Activity>
